@@ -1,4 +1,4 @@
-![example event parameter](https://github.com/OpenSourceEconomics/ose-data-science-course-project-Abraham-newbie/tree/master/.github/workflows/main.yml/badge.svg?event=push)
+![example event parameter](https://github.com/OpenSourceEconomics/ose-data-science-course-project-Abraham-newbie/tree/master/.github/workflows/ci.yml/badge.svg?event=push)
 
 # Ose Data Science Project
 
