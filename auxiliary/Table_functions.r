@@ -128,7 +128,7 @@ for (r in 1:i)
                     
  
                     
-
+display_vars<- c("pooled_treatment")
 
 outreg <- capture.output( 
         
