@@ -11,7 +11,7 @@ jobs:
     - uses: actions/checkout@v2
     - uses: conda-incubator/setup-miniconda@v2
       with:
-           activate-environment: r_env
+           activate-environment: project_env
            environment-file: environment.yml
            python-version: 3.6
            auto-activate-base: true
@@ -19,5 +19,5 @@ jobs:
       shell: bash -l {0}
       run: |
         export PATH="$PATH:/usr/share/miniconda/bin"
-        conda activate r_env
+        conda activate project_env
         jupyter nbconvert --to html --execute  project.ipynb

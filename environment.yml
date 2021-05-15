@@ -1,4 +1,4 @@
-name: r_env
+name: project_env
 
 channels:
   - defaults
