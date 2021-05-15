@@ -1,4 +1,4 @@
-[![YourActionName Actions Status](https://github.com/OpenSourceEconomics/ose-data-science-course-project-Abraham-newbie/blob/master/.github/workflows/ci.yml/badge.svg)](https://github.com/OpenSourceEconomics/ose-data-science-course-project-Abraham-newbie/actions)
+[![Continuous Integration](https://github.com/OpenSourceEconomics/ose-data-science-course-project-Abraham-newbie/actions/workflows/ci.yml/badge.svg)](https://github.com/OpenSourceEconomics/ose-data-science-course-project-Abraham-newbie/actions/workflows/ci.yml) [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/OpenSourceEconomics/ose-data-science-course-project-Abraham-newbie/HEAD?filepath=https%3A%2F%2Fgithub.com%2FOpenSourceEconomics%2Fose-data-science-course-project-Abraham-newbie%2Fblob%2Fmaster%2Fproject.ipynb) [![nbviewer](https://raw.githubusercontent.com/jupyter/design/master/logos/Badges/nbviewer_badge.svg)](https://nbviewer.jupyter.org/github/OpenSourceEconomics/ose-data-science-course-project-Abraham-newbie/blob/master/project.ipynb)
 
 # Ose Data Science Project
 
