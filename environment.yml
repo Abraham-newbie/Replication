@@ -23,3 +23,5 @@ dependencies:
   - r-stargazer
   - r-magrittr
   - r-xtable
+  - r-kableExtra
+  - r-broom
