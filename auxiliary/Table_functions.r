@@ -304,12 +304,6 @@ data.frame(results.df$Characteristics,results.df$program,results.df$prog_minus_g
 
 
 
-
-
-
-
-
-
 Table_2 <-function(data)
 {
 
@@ -438,17 +432,19 @@ results.df$Characteristics<-c("Child age","Female","Child in School","Child of h
 
 
 
+options(knitr.kable.NA = '')
 
 display_html(toString(
 data.frame(results.df$Characteristics,results.df$control,results.df$treat,results.df$fu_control,results.df$fu_treat)%>%
     mutate_if(is.numeric, round, digits = 3 )%>%
-    mutate(results.df.treat=paste(results.df.treat, results.df$treat_signif))%>%
     mutate(results.df.fu_treat=paste(results.df.fu_treat, results.df$fu_treat_signif))%>%
+
+    mutate(results.df.fu_control=paste(results.df.fu_control,""))%>% 
 
     knitr::kable(., col.names = c("Characteristics","Baseline Control",
                            "Baseline Treatment - Control",
                            "Followup Control",
-                           "Followup Treatment - Control")) %>% 
+                           "Followup Treatment - Control"),align = "l") %>% 
     kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
 
 ))
@@ -457,8 +453,11 @@ data.frame(results.df$Characteristics,results.df$control,results.df$treat,result
 
 
 }
-                                                 
-            
+
+
+
+
+
 
 
 Table_7 <-function(data)
