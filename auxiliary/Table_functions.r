@@ -301,3 +301,306 @@ data.frame(results.df$Characteristics,results.df$program,results.df$prog_minus_g
 ))
 
 }
+
+
+
+
+
+
+
+
+
+Table_2 <-function(data)
+{
+
+child_data<-data
+
+
+make_stars <- function(pval) {
+  stars = ""
+  if(pval <= 0.001)
+    stars = "***"
+  if(pval > 0.001 & pval <= 0.01)
+    stars = "**"
+  if(pval > 0.01 & pval <= 0.05)
+    stars = "*"
+  if(pval > 0.05 & pval <= 0.1)
+     stars = "."
+  stars
+}
+
+i=1
+
+vars<-c("bl_child_age","bl_child_female", "bl_child_in_school","bl_household_size",
+        "bl_number_child", "bl_education","bl_farmer")
+
+
+results.df<-NULL
+for (var in vars){
+    
+     child_data_subset= child_data %>% filter(bl_child_level == 1 & baseline_household == 1 & pooled_treatment == 0)
+    
+    child_data_subset$control=1
+ 
+         
+    full.formula <- as.formula(paste(var, paste("control -1",collapse = ' + '),sep='~')) 
+                                           
+    obj<-lm(full.formula,data=child_data_subset,weights=child_data_subset$hh_weight)
+    
+    
+    result<-tidy(obj) %>% mutate(signif = sapply(p.value, function(x) make_stars(x)))
+    results.df$control[i]<-result$estimate
+    results.df$control_se[i]<-result$std.error
+    results.df$control_signif[i]<-result$signif
+    
+    child_data_subset= child_data %>% filter(bl_child_level == 1 & baseline_household == 1)
+    
+        
+    full.formula <- as.formula(paste(var, paste("pooled_treatment",collapse = ' + '),sep='~')) 
+                                           
+    obj<-lm(full.formula,data=child_data_subset,weights=child_data_subset$hh_weight)
+    
+    result<-tidy(obj) %>% mutate(signif = sapply(p.value, function(x) make_stars(x)))
+    results.df$treat[i]<-result$estimate[2]
+    results.df$treat_se[i]<-result$std.error[2]
+    results.df$treat_signif[i]<-result$signif[2]
+    
+    
+     i=i+1
+    
+    }
+    
+vars<-c("fu_child_age", "fu_female", "bl_child_in_school" ,"fu_child_of_hh_head", "fu_household_size", 
+        "fu_num_children", "fu_hh_head_edu" ,"fu_hh_head_occ_farmer","fu_total_land",
+        "fu1c_ht_pukka" ,"fu1c_ht_semi_pukka", "fu1c_ht_kaccha" ,"fu1c_ht_thatched_huts",  
+        "fu_num_goats" ,"fu_muslim_fiqa_sunni" ,"fu_lang_urdu" ,"fu_lang_sindhi")
+
+
+
+
+r=1
+for (var in vars){
+    
+    child_data_subset= child_data %>% filter(fu_young_child == 1 & fu_child_level == 1 & pooled_treatment == 0)
+    
+    child_data_subset$control=1
+ 
+         
+    full.formula <- as.formula(paste(var, paste("control",collapse = ' + '),sep='~')) 
+                                           
+    obj<-lm(full.formula,data=child_data_subset,weights=child_data_subset$hh_weight)
+    
+    
+    result<-tidy(obj) %>% mutate(signif = sapply(p.value, function(x) make_stars(x)))
+    results.df$fu_control[r]<-result$estimate
+    results.df$fu_control_se[r]<-result$std.error
+    results.df$fu_control_signif[r]<-result$signif
+   
+    child_data_subset= child_data %>% filter(fu_young_child == 1 & fu_child_level == 1)
+    
+        
+    full.formula <- as.formula(paste(var, paste("pooled_treatment",collapse = ' + '),sep='~')) 
+                                           
+    obj<-lm(full.formula,data=child_data_subset,weights=child_data_subset$hh_weight)
+    
+    result<-tidy(obj) %>% mutate(signif = sapply(p.value, function(x) make_stars(x)))
+    results.df$fu_treat[r]<-result$estimate[2]
+    results.df$fu_treat_se[r]<-result$std.error[2]
+    results.df$fu_treat_signif[r]<-result$signif[2]
+    
+    
+     
+    if(r>7){ 
+    results.df$control[i]<-NA
+    results.df$control_se[i]<-NA
+    results.df$control_pvalue[i]<-NA
+    
+    result<-tidy(obj)
+    results.df$treat[i]<-NA
+    results.df$treat_se[i]<-NA
+    results.df$treat_pvalue[i]<-NA
+    
+     i=i+1
+              
+    }
+     r=r+1
+    
+    
+    
+    }
+    
+
+
+results.df$Characteristics<-c("Child age","Female","Child in School","Child of hh head","Household size","Number of Children",
+                               "Household head education","Household head farmer","Total land","Pukka house","Semi-Pukka house",
+                               "Kaccha house","Thatched hut","Goat","Sunni","Urdu","Sindhi")
+
+
+
+
+
+display_html(toString(
+data.frame(results.df$Characteristics,results.df$control,results.df$treat,results.df$fu_control,results.df$fu_treat)%>%
+    mutate_if(is.numeric, round, digits = 3 )%>%
+    mutate(results.df.treat=paste(results.df.treat, results.df$treat_signif))%>%
+    mutate(results.df.fu_treat=paste(results.df.fu_treat, results.df$fu_treat_signif))%>%
+
+    knitr::kable(., col.names = c("Characteristics","Baseline Control",
+                           "Baseline Treatment - Control",
+                           "Followup Control",
+                           "Followup Treatment - Control")) %>% 
+    kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
+
+))
+
+
+
+
+}
+                                                 
+            
+
+
+Table_7 <-function(data)
+{
+
+child_data <-data
+make_stars <- function(pval) {
+  stars = ""
+  if(pval <= 0.001)
+    stars = "***"
+  if(pval > 0.001 & pval <= 0.01)
+    stars = "**"
+  if(pval > 0.01 & pval <= 0.05)
+    stars = "*"
+  if(pval > 0.05 & pval <= 0.1)
+     stars = "."
+  stars
+}
+
+
+
+
+child_data$fu_future_job_civil <- ifelse(child_data$fu_future_job== "Civil servant", 1, 0)
+
+child_data$fu_future_job_doctor <- ifelse(child_data$fu_future_job== "Doctor", 1, 0)
+
+child_data$fu_future_job_pvt <- ifelse(child_data$fu_future_job== "Employed in Private enterprise", 1, 0)
+
+
+child_data$fu_future_job_engineer <- ifelse(child_data$fu_future_job== "Engineer", 1, 0)
+
+child_data$fu_future_job_farmer <- ifelse(child_data$fu_future_job== "Farmer", 1, 0)
+
+child_data$fu_future_job_housewife <- ifelse(child_data$fu_future_job== "Housewife", 1, 0)
+
+
+child_data$fu_future_job_laborer<- ifelse(child_data$fu_future_job == "Laborer", 1, 0)
+
+child_data$fu_future_job_landlord<- ifelse(child_data$fu_future_job == "Landlord", 1, 0)
+
+child_data$fu_future_job_police_army<- ifelse(child_data$fu_future_job ==  "Police/army/security", 1, 0)
+
+child_data$fu_future_job_teacher<- ifelse(child_data$fu_future_job == "Teacher", 1, 0)
+
+child_data$fu_future_job_lawyer<- ifelse(child_data$fu_future_job == "Lawyer", 1, 0)
+
+child_data$fu_future_job_raise_livestock<- ifelse(child_data$fu_future_job == "Raise livestock", 1, 0)
+
+child_data$control<- ifelse(child_data$pooled_treatment==1, 0, 1)
+
+
+vars<-c("fu_future_job_civil", "fu_future_job_doctor", "fu_future_job_pvt" ,"fu_future_job_engineer", "fu_future_job_farmer", 
+        "fu_future_job_housewife","fu_future_job_laborer","fu_future_job_landlord","fu_future_job_police_army",
+        "fu_future_job_teacher","fu_future_job_lawyer","fu_future_job_raise_livestock","fu_ideal_marriage_age")
+        
+
+    
+
+        
+results.df<-NULL
+lk<-NULL
+
+r=1
+for (var in vars){
+    child_data_subset =child_data %>% filter(fu_child_level==1 & fu_young_child==1 & control==1)
+    
+ 
+         
+    full.formula <- as.formula(paste(var, paste("control-1",collapse = ' + '),sep='~')) 
+                                           
+    obj<-lm(full.formula,data=child_data_subset,weights=child_data_subset$hh_weight)
+    
+    
+    result<-tidy(obj) %>% mutate(signif = sapply(p.value, function(x) make_stars(x)))
+    results.df$fu_control[r]<-result$estimate
+    results.df$fu_control_se[r]<-result$std.error
+    results.df$fu_control_signif[r]<-result$signif
+    
+                                                 
+                                              
+    child_data_subset =child_data %>% filter(fu_child_level==1 & fu_young_child==1)
+    full.formula <- as.formula(paste(var, paste("pooled_treatment",collapse = ' + '),sep='~')) 
+    obj<-lm(full.formula,data=child_data_subset,weights=child_data_subset$hh_weight )
+                                                 
+    result<-tidy(obj) %>% mutate(signif = sapply(p.value, function(x) make_stars(x)))
+    results.df$fu_treat[r]<-result$estimate[2]
+    results.df$fu_treat_se[r]<-result$std.error[2]
+    results.df$fu_treat_signif[r]<-result$signif[2]
+                                                 
+    full.formula <- as.formula(paste(var, paste("fu_female + pooled_treatment + treatment_female",collapse = ' + '),sep='~')) 
+    obj<-lm(full.formula,data=child_data_subset,weights=child_data_subset$hh_weight )
+                                                 
+    result<-tidy(obj) %>% mutate(signif = sapply(p.value, function(x) make_stars(x)))
+    results.df$fu_female[r]<-result$estimate[2]
+    results.df$fu_female_se[r]<-result$std.error[2]
+    results.df$fu_female_signif[r]<-result$signif[2]
+                                                 
+    results.df$fu_treat2[r]<-result$estimate[3]
+    results.df$fu_treat2_se[r]<-result$std.error[3]
+    results.df$fu_treat2_signif[r]<-result$signif[3]
+                                                 
+    results.df$fu_treat_female[r]<-result$estimate[4]
+    results.df$fu_treat_female_se[r]<-result$std.error[4]
+    results.df$fu_treat_female_signif[r]<-result$signif[4]
+                                                 
+     r=r+1
+    }
+
+                          
+
+
+
+vars<-c("fu_future_job_civil", "fu_future_job_doctor", "fu_future_job_pvt" ,"fu_future_job_engineer", "fu_future_job_farmer", 
+        "fu_future_job_housewife","fu_future_job_laborer","fu_future_job_landlord","fu_future_job_police_army",
+        "fu_future_job_teacher","fu_future_job_lawyer","fu_future_job_raise_livestock","fu_ideal_marriage_age")
+                                                 
+        
+results.df$Characteristics<-c("Civil Servant", "Doctor", "Private Enterprise" ,"Engineer", "Farmer", 
+        "Housewife","Laborer","Landlord","Police/army/security",
+        "Teacher","Lawyer","Raise Livestock","Ideal marriage age")
+
+
+
+
+
+display_html(toString(
+data.frame(results.df$Characteristics,results.df$fu_control,results.df$fu_treat,results.df$fu_female,results.df$fu_treat2,
+           results.df$fu_treat_female)%>%
+            mutate_if(is.numeric, round, digits = 3 )%>%
+            mutate(results.df.fu_treat=paste(results.df.fu_treat,results.df$fu_treat_signif))%>%
+            mutate(results.df.fu_female=paste(results.df.fu_female,results.df$fu_female_signif))%>%
+            mutate(results.df.fu_treat2=paste(results.df.fu_treat2,results.df$fu_treat2_signif))%>%
+            mutate(results.df.fu_treat_female=paste(results.df.fu_treat_female,results.df$fu_treat_female_signif))%>%
+            mutate(results.df.fu_control=paste(results.df.fu_control, ""))%>% 
+            knitr::kable(., col.names = c("Characteristics","Control",
+                           "Treatment - Control",
+                           "Female",
+                           "Treatment","Treatment x Female"),caption = "Table 7 : Program Impacts on Aspirations") %>% 
+    kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
+
+))                                            
+     
+                                                 
+}
+
