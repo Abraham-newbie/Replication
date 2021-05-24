@@ -1,3 +1,67 @@
+Table_1<-function(data){
+    
+
+
+
+df <- data.frame(matrix(ncol = 6, nrow = 0))
+x <- c("Number of:","Control","Pooled Treat.","Gender Uniform Treat." ,"Gender Differentiated Treat.","Total")
+colnames(df) <- x
+
+
+
+#control
+
+df[1,2]<-child_data %>% filter(village_level==1 & pooled_treatment == 0)%>%nrow()
+
+df[2,2]<-child_data %>% filter(census_household_w_child==1 & pooled_treatment == 0)%>% nrow()
+df[3,2]<-child_data %>% filter(fu1c_child==1 & fu1c_child_level ==1 & pooled_treatment == 0)%>% nrow()
+df[4,2]<-child_data %>% filter(followup_household==1 & pooled_treatment == 0)%>% nrow()
+df[5,2]<-child_data %>% filter(fu_child==1 & fu_child_level ==1 & pooled_treatment == 0)%>% nrow()
+
+#pooled treatment
+df[1,3]<-child_data %>% filter(village_level==1 & pooled_treatment ==1)%>%nrow()
+df[2,3]<-child_data %>% filter(census_household_w_child==1 & pooled_treatment ==1)%>% nrow()
+df[3,3]<-child_data %>% filter(fu1c_child==1 & fu1c_child_level ==1 & pooled_treatment == 1)%>% nrow()
+df[4,3]<-child_data %>% filter(followup_household==1 & pooled_treatment == 1)%>% nrow()
+df[5,3]<-child_data %>% filter(fu_child==1 & fu_child_level ==1 & pooled_treatment == 1)%>% nrow()
+
+#treatment 1
+
+df[1,4]<-child_data %>% filter(village_level==1 & treatment_1 == 1)%>%nrow()
+df[2,4]<-child_data %>% filter(census_household_w_child==1 & treatment_1 == 1)%>% nrow()
+df[3,4]<-child_data %>% filter(fu1c_child==1 & fu1c_child_level ==1 & treatment_1 == 1)%>% nrow()
+df[4,4]<-child_data %>% filter(followup_household==1 & treatment_1 == 1)%>% nrow()
+df[5,4]<-child_data %>% filter(fu_child==1 & fu_child_level ==1 & treatment_1  == 1)%>% nrow()
+
+#treatment 2
+
+df[1,5]<-child_data %>% filter(village_level==1 & treatment_2 == 1)%>%nrow()
+df[2,5]<-child_data %>% filter(census_household_w_child==1 & treatment_2 == 1)%>% nrow()
+df[3,5]<-child_data %>% filter(fu1c_child==1 & fu1c_child_level ==1 & treatment_2 == 1)%>% nrow()
+df[4,5]<-child_data %>% filter(followup_household==1 & treatment_2 == 1)%>% nrow()
+df[5,5]<-child_data %>% filter(fu_child==1 & fu_child_level ==1 & treatment_2  == 1)%>% nrow()
+
+
+#all
+df[1,6]<-child_data %>% filter(village_level==1)%>%nrow()
+df[2,6]<-child_data %>% filter(fu1c_child==1 & fu1c_child_level ==1)%>% nrow()
+df[3,6]<-child_data %>% filter(census_household_w_child==1)%>% nrow()
+df[4,6]<-child_data %>% filter(followup_household==1)%>% nrow()
+df[5,6]<-child_data %>% filter(fu_child_level == 1 & fu_child == 1)%>% nrow
+
+df[,1]<-c("Villages","Baseline Households","Young Children","Households","Young children")
+
+
+
+
+
+display_html(toString(df %>% 
+                    knitr::kable() %>%
+    kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
+
+))
+#Outputs do not match output in paper - but exactly matches output from author's own stata codes.
+}     
 Table_6<-function(data) {
 
 child_controls = c("control_fu_child_age", "control_fu_female", "missing_fu_child_age", "missing_fu_female")
