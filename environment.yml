@@ -25,3 +25,5 @@ dependencies:
   - r-xtable
   - r-kableExtra
   - r-broom
+  - r-patchwork
+  - r-ggthemes
