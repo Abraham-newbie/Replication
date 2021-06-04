@@ -662,8 +662,13 @@ data.frame(results.df$Characteristics,results.df$fu_control,results.df$fu_treat,
                            "Treatment","Treatment x Female"),caption = "Table 7 : Program Impacts on Aspirations") %>% 
     kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
 
-))                                            
-     
+))  
+                                                 
+                                            
+data <-data.frame(results.df$Characteristics,results.df$fu_control,results.df$fu_treat,results.df$fu_female,results.df$fu_treat2,
+           results.df$fu_treat_female)
+                                            
+return(data)
                                                  
 }
 
