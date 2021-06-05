@@ -363,6 +363,15 @@ data.frame(results.df$Characteristics,results.df$program,results.df$prog_minus_g
     kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
 
 ))
+data <- data.frame(
+  individual=results.df$Characteristics,
+ group=c( rep('A', 10), rep('B', 10), rep('C', 10), rep('D', 8)) ,
+  value1=results.df$program,
+  value2=results.df$private,
+  value3=results.df$gov
+)
+
+return(data)
 
 }
 
