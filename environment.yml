@@ -29,3 +29,4 @@ dependencies:
   - r-ggthemes
   - r-ggextra
   - r-viridis
+  - r-gridExtra

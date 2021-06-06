@@ -1,5 +1,5 @@
 ###########################################################
-#### Figure 1 POly plot generation function
+#### Figure 1.1 POly plot generation function
 ###########################################################
 
 poly_plot<-function(data,x,y) {
@@ -8,15 +8,73 @@ school_data_subset_control<-data %>% filter(fu_child_level == 1 & fu_young_child
 school_data_subset_treat<-  data %>% filter(fu_child_level == 1 & fu_young_child == 1 & pooled_treatment==1)
 size=0.75
     
-ggplot(NULL,aes_string(x=x , y=y))+  theme_minimal()+
-           geom_smooth(data=school_data_subset_control,method = "loess", formula = y ~ poly(x) ,se=FALSE,size = size, col = "red",bw=0.15,linetype="dashed") + 
-           geom_smooth(data=school_data_subset_treat,method = "loess", formula = y ~ poly(x), size =size, se=FALSE, col = "blue",bw=0.15) +
-           geom_smooth(data=school_data_subset_control,method = "lm", formula = y ~ x ,se=FALSE,size = size, col = "green",bw=0.15,linetype="dashed") + 
-           geom_smooth(data=school_data_subset_treat,method =  "lm", formula = y ~ x, size = size, se=FALSE, col = "violet",bw=0.15) +
-             geom_smooth(data=school_data_subset_control,method = "lm", formula = y ~ poly(x^5) ,se=FALSE,size = size, col = "black",bw=0.15,linetype="dashed") + 
-           geom_smooth(data=school_data_subset_treat,method =  "lm", formula = y ~ poly(x^5), size = size, se=FALSE, col = "yellow",bw=0.15) 
-           
+ggplot(NULL,aes_string(x=x , y=y))+  theme_minimal()+ 
+           geom_smooth(data=school_data_subset_control,method = "loess", formula = y ~ poly(x) ,se=FALSE,size = size, col="#291F7FFF",linetype="dashed") + 
+           geom_smooth(data=school_data_subset_treat,method = "loess", formula = y ~ poly(x), size =size, se=FALSE, col = "#B8DE29FF") +
+           geom_smooth(data=school_data_subset_control,method = "lm", formula = y ~ x ,se=FALSE,size = size, col ="#33638DFF",linetype="dashed") + 
+           geom_smooth(data=school_data_subset_treat,method =  "lm", formula = y ~ x, size = size, se=FALSE, col = "#DCE319FF")+
+                 geom_smooth(data=school_data_subset_control,method = "lm", formula = y ~ poly(x^5) ,se=FALSE,size = size,               col="#55C667FF",linetype="dashed") + 
+           geom_smooth(data=school_data_subset_treat,method =  "lm", formula = y ~ poly(x^5), size = size, se=FALSE, col = "#FDE725FF")+
+    scale_color_manual(name = "légende",labels = c("Data", "Moy", "loess regression \n with confidence interval"), 
+                     values = c("darkgray", "royalblue", "red"))
 }
+
+
+
+###########################################################
+#### Figure 1.2 Marginal plot generation function
+###########################################################
+
+
+marginal_plot<-function(data)
+{
+
+data<-school_data %>% filter(min_school_dist_sef < 1)  %>% 
+            filter(fu_child_level == 1 & fu_young_child == 1 & pooled_treatment==1) 
+
+p=ggplot(data =data,
+          aes(x =min_school_dist_sef, y = fu_child_enrolled)) +
+      geom_point() + geom_smooth(se=FALSE,size = 0.5)+
+     theme_minimal()+ labs(x ="Minimum Distance to School < 1 ",y= "Probability of Enrollment")
+p1 <- ggMarginal(p, fill = "slateblue",type="histogram")
+
+
+data<-school_data %>% filter(min_school_dist_sef < 1.5)  %>% 
+            filter(fu_child_level == 1 & fu_young_child == 1 & pooled_treatment==1) 
+
+p=ggplot(data =data,
+          aes(x =min_school_dist_sef, y = fu_child_enrolled)) +
+      geom_point() + geom_smooth(se=FALSE,size = 0.5)+
+     theme_minimal()+ labs(x ="Minimum Distance to School < 1.5 ",y= "Probability of Enrollment")
+p2 <- ggMarginal(p, fill = "slateblue",type="histogram")
+
+data<-school_data %>% filter(min_school_dist_sef < 1.5)  %>% 
+            filter(fu_child_level == 1 & fu_young_child == 1 & pooled_treatment==1 &fu_female == 1) 
+
+p=ggplot(data =data,
+          aes(x =min_school_dist_sef, y = fu_child_enrolled)) +
+      geom_point() + geom_smooth(se=FALSE,size = 0.5)+
+     theme_minimal()+ labs(x ="Minimum Distance to School (Girls)",y= "Probability of Enrollment")
+p3 <- ggMarginal(p, fill = "slateblue",type="histogram")
+
+
+data<-school_data %>% filter(min_school_dist_sef < 1.5)  %>% 
+            filter(fu_child_level == 1 & fu_young_child == 1 & pooled_treatment==1 &fu_female == 0) 
+
+p=ggplot(data =data,
+          aes(x =min_school_dist_sef, y = fu_child_enrolled)) +
+      geom_point() + geom_smooth(se=FALSE,size = 0.5)+
+     theme_minimal()+ labs(x ="Minimum Distance to School (Boys)",y= "Probability of Enrollment")
+p4 <- ggMarginal(p, fill = "slateblue",type="histogram")
+    
+return(grid.arrange(p1, p2, p3,p4, ncol=2,nrow=2))
+
+}
+
+
+
+
+
 
 ###########################################################
 #### Map 1 generation function
@@ -162,3 +220,7 @@ print(p)
 # Save at png
     
 }
+                    
+                    
+                    
+                    
