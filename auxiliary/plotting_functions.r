@@ -1,3 +1,44 @@
+
+
+
+###########################################################
+#### Figure: Randomized Allocation Visualization
+###########################################################
+
+
+
+
+
+rct_plot<-function(data){
+    
+    
+
+
+
+child_data_subset= data %>% filter(bl_child_level == 1 & baseline_household == 1)%>%select(bl_education,bl_household_size,bl_number_child,pooled_treatment)%>%na.omit()
+
+child_data_subset$pooled_treatment=as_factor(child_data_subset$pooled_treatment)
+child_data_subset_pool<-child_data_subset[ sample( which(child_data_subset$pooled_treatment==1), round(0.2*length(which(child_data_subset$pooled_treatment==1)))), ]
+child_data_subset_control<-child_data_subset[ sample( which(child_data_subset$pooled_treatment==0), round(1*length(which(child_data_subset$pooled_treatment==0)))), ]
+child_data_subset<-rbind(child_data_subset_pool,child_data_subset_control)
+child_data_subset%<>% filter(bl_household_size<30)
+
+fig <- plot_ly(child_data_subset, x = ~ bl_household_size , y = ~bl_education, z = ~bl_number_child, color = ~pooled_treatment, colors = c('#BF382A', '#0C4B8E'))
+fig <- fig %>% add_markers()
+fig <- fig %>% layout(scene = list(xaxis = list(title = 'Household Size'),
+                     yaxis = list(title = 'No. of Children'),
+                     zaxis = list(title = 'Education Household head')))%>%layout(title = "Randomized Treatment Allocation")
+
+return(fig)
+}
+
+
+
+
+
+
+
+
 ###########################################################
 #### Figure 1.1 POly plot generation function
 ###########################################################
@@ -25,7 +66,6 @@ ggplot(NULL,aes_string(x=x , y=y))+  theme_minimal()+
 #### Figure 1.2 Marginal plot generation function
 ###########################################################
 
-
 marginal_plot<-function(data)
 {
 
@@ -34,9 +74,9 @@ data<-school_data %>% filter(min_school_dist_sef < 1)  %>%
 
 p=ggplot(data =data,
           aes(x =min_school_dist_sef, y = fu_child_enrolled)) +
-      geom_point() + geom_smooth(se=FALSE,size = 0.5)+
+      geom_point() + geom_smooth(method = 'loess', formula = 'y ~ x+x^2',se=FALSE,size = 0.5)+
      theme_minimal()+ labs(x ="Minimum Distance to School < 1 ",y= "Probability of Enrollment")
-p1 <- ggMarginal(p, fill = "slateblue",type="histogram")
+p1 <- ggMarginal(p, fill = "chocolate3",type="histogram")
 
 
 data<-school_data %>% filter(min_school_dist_sef < 1.5)  %>% 
@@ -44,18 +84,18 @@ data<-school_data %>% filter(min_school_dist_sef < 1.5)  %>%
 
 p=ggplot(data =data,
           aes(x =min_school_dist_sef, y = fu_child_enrolled)) +
-      geom_point() + geom_smooth(se=FALSE,size = 0.5)+
+      geom_point() + geom_smooth(method = 'loess', formula = 'y ~ x+x^2',se=FALSE,size = 0.5)+
      theme_minimal()+ labs(x ="Minimum Distance to School < 1.5 ",y= "Probability of Enrollment")
-p2 <- ggMarginal(p, fill = "slateblue",type="histogram")
+p2 <- ggMarginal(p, fill = "gold1",type="histogram")
 
 data<-school_data %>% filter(min_school_dist_sef < 1.5)  %>% 
             filter(fu_child_level == 1 & fu_young_child == 1 & pooled_treatment==1 &fu_female == 1) 
 
 p=ggplot(data =data,
           aes(x =min_school_dist_sef, y = fu_child_enrolled)) +
-      geom_point() + geom_smooth(se=FALSE,size = 0.5)+
+      geom_point() + geom_smooth(method = 'loess', formula = 'y ~ x+x^2',se=FALSE,size = 0.5)+
      theme_minimal()+ labs(x ="Minimum Distance to School (Girls)",y= "Probability of Enrollment")
-p3 <- ggMarginal(p, fill = "slateblue",type="histogram")
+p3 <- ggMarginal(p, fill = "pink",type="histogram")
 
 
 data<-school_data %>% filter(min_school_dist_sef < 1.5)  %>% 
@@ -63,14 +103,13 @@ data<-school_data %>% filter(min_school_dist_sef < 1.5)  %>%
 
 p=ggplot(data =data,
           aes(x =min_school_dist_sef, y = fu_child_enrolled)) +
-      geom_point() + geom_smooth(se=FALSE,size = 0.5)+
+      geom_point() + geom_smooth(method = 'loess', formula = 'y ~ x+x^2',se=FALSE,size = 0.5)+scale_fill_viridis_d()+
      theme_minimal()+ labs(x ="Minimum Distance to School (Boys)",y= "Probability of Enrollment")
 p4 <- ggMarginal(p, fill = "slateblue",type="histogram")
     
 return(grid.arrange(p1, p2, p3,p4, ncol=2,nrow=2))
 
 }
-
 
 
 
@@ -125,7 +164,7 @@ p<-ggplot(pakistan, aes(x = long, y = lat, group = region)) + geom_polygon(aes(f
          subtitle = "  2017", 
          caption = "Data : Annual School Census 2017-18,Goverment of Punjab; Spatial Data : r - Choroplethr")+ 
          theme_map() +
-         scale_fill_viridis(option = "brewer blues", direction = -1,name = "enrollment %",guide = guide_colorbar(
+         scale_fill_viridis(option = "viridis", direction = -1,name = "enrollment %",guide = guide_colorbar(
       direction = "horizontal",
       barheight = unit(2, units = "mm"),
       barwidth = unit(50, units = "mm"),
@@ -221,6 +260,99 @@ print(p)
     
 }
                     
+#################################################### 
+# Plot Impact on Number of Days Operational and Hours Teaching
+##################################################
+  
+impact_hours_days_teaching<-function(data)
+    { 
+school_data<-data
+total_cntrl <- school_data %>% filter(fu_child_level == 1 & fu_young_child == 1 & pooled_treatment==0 ) %>%select (ss2_num_days_operational)
+total_treat<- school_data %>% filter(fu_child_level == 1 & fu_young_child == 1 & pooled_treatment==1  )%>% select (ss2_num_days_operational)
+combdat <- dplyr::bind_rows(list(control=total_cntrl,treatment=total_treat),.id="treat_status") %>% na.omit()
+f_1 <-ggplot(combdat, aes(ss2_num_days_operational, fill =treat_status )) + geom_density(alpha = 0.2) + theme_minimal()+scale_fill_viridis_d()+ labs(x ="Number of Days Operational",y= "Density")
+
+
+total_score_pct_cntrl <- school_data %>% filter(fu_child_level == 1 & fu_young_child == 1 & pooled_treatment==0 ) %>%select (ss9_hours_teaching)
+total_score_pct_treat<- school_data %>% filter(fu_child_level == 1 & fu_young_child == 1 & pooled_treatment==1  )%>% select (ss9_hours_teaching)
+combdat <- dplyr::bind_rows(list(control=total_score_pct_cntrl,treatment=total_score_pct_treat),.id="treat_status") %>% na.omit()
+f_2 <-ggplot(combdat, aes(ss9_hours_teaching, fill =treat_status )) + geom_density(alpha = 0.2) + theme_minimal()+scale_fill_viridis_d()+ labs(x ="Number of Teaching Hours",y= "Density")
+
+
+print(f_1/f_2)
+    
+}                  
+       
+#################################################### 
+# Plot Impact on Number of Teachers and Score
+##################################################
+                     
+impact_score_teachers<-function(data){
+    
+school_data=data
+
+total_score_pct_cntrl <- school_data %>% filter(fu_child_level == 1 & fu_young_child == 1 & pooled_treatment==0 ) %>%select (total_score_pct)%>%na.omit()
+total_score_pct_treat<- school_data %>% filter(fu_child_level == 1 & fu_young_child == 1 & pooled_treatment==1  )%>% select (total_score_pct)%>%na.omit()
+combdat <- dplyr::bind_rows(list(control=total_score_pct_cntrl,treatment=total_score_pct_treat),.id="treat_status")
+f_1<-ggplot(combdat, aes(total_score_pct, fill =treat_status )) + theme_minimal()+
+   geom_histogram(alpha = 0.5, aes(y = ..density..), position = 'identity',color = "black") +scale_fill_viridis_d(name = "")+
+  labs(x ="Percentage Score",y= "Density")
+
+
+
+
+
+
+total_score_pct_cntrl <- school_data %>% filter(fu_child_level == 1 & fu_young_child == 1 & pooled_treatment==0 ) %>%select (ss3_num_teachers)%>%na.omit()
+total_score_pct_treat<- school_data %>% filter(fu_child_level == 1 & fu_young_child == 1 & pooled_treatment==1  )%>% select (ss3_num_teachers)%>%na.omit()
+combdat <- dplyr::bind_rows(list(control=total_score_pct_cntrl,treatment=total_score_pct_treat),.id="treat_status")
+
+f_2<-ggplot(combdat, aes(ss3_num_teachers, x=treat_status,y=ss3_num_teachers,fill =treat_status )) + theme_minimal()+
+       geom_violin(trim = FALSE)+theme(legend.position = "none")+scale_fill_viridis_d()+
+        labs(x ="Number of Teachers",y= "Density")
+
+
+
+
+print((f_1|f_2)/(f_1|f_2))
+    
+    
+}      
                     
                     
                     
+        
+###################################################################
+# Plot ReLationship between female enrollment and distance to school
+##################################################################                   
+                    
+                    
+enroll_girls_dist<-function(data){
+    
+    
+school_data<-data   
+m2<-school_data %>% filter(min_school_dist_sef < 1.5) 
+m2$fu_female=as_factor(m2$fu_female)
+school_data_subset_control<-m2 %>% filter(fu_child_level == 1 & fu_young_child == 1 & pooled_treatment==0) %>% 
+        select(min_school_dist_sef,ss5_pct_students_female) %>% na.omit()
+school_data_subset_treat<-  m2 %>% filter(fu_child_level == 1 & fu_young_child == 1 & pooled_treatment==1)%>%
+         select(min_school_dist_sef,ss5_pct_students_female) %>% na.omit()
+school_data_subset<-  m2 %>% filter(fu_child_level == 1 & fu_young_child == 1)%>%
+              select(min_school_dist_sef,ss5_pct_students_female) %>% na.omit()
+b_1<- ggplot(school_data_subset_treat, aes(x =min_school_dist_sef, y = ss5_pct_students_female))+ 
+     geom_hex() +
+  scale_fill_viridis_c(option="mako",direction=-1) +theme_classic()+ labs(x ="Minimum Distance to School (Treat)",y= "Percentage Female Students")
+
+b_2<-ggplot(school_data_subset_control, aes(x =min_school_dist_sef, y = ss5_pct_students_female))+ 
+     geom_hex() +
+  scale_fill_viridis_c(option="inferno",direction=-1) +theme_classic()+ labs(x ="Minimum Distance to School (Control)",y= "Percentage Female Students")
+
+b_3<-ggplot(school_data_subset, aes(x =min_school_dist_sef, y = ss5_pct_students_female))+ 
+     geom_hex() +
+  scale_fill_viridis_c(option="rocket",direction=-1) +theme_classic()+ labs(x ="Minimum Distance to School (All)",y= "Percentage Female Students")
+b_4<-ggplot(school_data_subset, aes(x =min_school_dist_sef, y = ss5_pct_students_female))
+k<-((b_1|b_2)/(b_3|plot_spacer()) + plot_layout(guides = "collect")  & theme(legend.position = "bottom"))
+print(k)
+
+    
+}

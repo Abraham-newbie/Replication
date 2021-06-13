@@ -30,3 +30,4 @@ dependencies:
   - r-ggextra
   - r-viridis
   - r-gridExtra
+  - r-plotly
