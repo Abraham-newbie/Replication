@@ -234,7 +234,7 @@ display_html(toString(outreg))
 ########################################
 
 
-child_data<- read_dta("C:/Users/abrah/Desktop/ose_project/ose-data-science-course-project-Abraham-newbie/data/ReStat_children.dta")
+
 
 
 double_lasso_penalization_function<-function(data){
