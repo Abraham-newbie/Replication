@@ -681,3 +681,100 @@ return(data)
                                                  
 }
 
+Table_3<-function(data) {
+    
+
+    
+
+child_controls = c("control_fu_child_age", "control_fu_female", "missing_fu_child_age", "missing_fu_female")
+
+hh_controls = c("control_fu_adults", "control_fu_hh_head_edu","control_fu_hh_head_occ_farmer" ,"control_fu_total_land", 
+             "control_fu_household_size" ,"missing_fu_adults", "missing_fu_hh_head_edu" ,"missing_fu_hh_head_occ_farmer",  
+             "missing_fu_total_land", "missing_fu_household_size")
+
+
+independent_vars = c("pooled_treatment")
+district_control =c("factor(bl_district)")
+
+child_data_subset= data %>% filter(fu_child_level == 1 & fu_young_child == 1)
+
+x_vars <- c(child_controls,hh_controls,independent_vars)
+
+
+lm_list <- NULL
+
+
+
+
+i=0 #Model1
+
+
+i=i+1
+x_vars <- c(independent_vars)
+full.formula <- as.formula(paste("fu_child_enrolled", paste(x_vars,collapse = ' + '),sep='~')) 
+
+lm_list[[i]]<-lm(full.formula,data=child_data_subset,weights=child_data_subset$hh_weight)
+ 
+i= i+1 #Model 2
+
+
+x_vars <- c(independent_vars,child_controls)
+full.formula <- as.formula(paste("fu_child_enrolled", paste(x_vars,collapse = ' + '),sep='~')) 
+
+lm_list[[i]]<-lm(full.formula,data=child_data_subset,weights=child_data_subset$hh_weight)
+ 
+i= i+1  #Model 3
+
+
+
+x_vars <- c(independent_vars,child_controls,hh_controls)
+full.formula <- as.formula(paste("fu_child_enrolled", paste(x_vars,collapse = ' + '),sep='~')) 
+lm_list[[i]]<-lm(full.formula,data=child_data_subset,weights=child_data_subset$hh_weight)
+          
+ 
+i= i+1  #Model 4
+
+x_vars <- c(independent_vars,child_controls,hh_controls,district_control)
+full.formula <- as.formula(paste("fu_child_enrolled", paste(x_vars,collapse = ' + '),sep='~')) 
+lm_list[[i]]<-lm(full.formula,data=child_data_subset,weights=child_data_subset$hh_weight)
+
+i= i+1  #Model 5
+
+x_vars <- c(independent_vars,child_controls,hh_controls,district_control)
+full.formula <- as.formula(paste("fu_child_highest_grade", paste(x_vars,collapse = ' + '),sep='~')) 
+lm_list[[i]]<-lm(full.formula,data=child_data_subset,weights=child_data_subset$hh_weight)
+    
+rob_se<-NULL
+for (r in 1:i)
+    {
+    rob_se[[r]]<- sqrt(diag(vcovHC(lm_list[[r]], type = "HC1")))
+    }
+                    
+ 
+display_vars<- c("pooled_treatment")
+
+outreg <- capture.output( 
+        
+    stargazer(lm_list,
+          type = "html",
+          keep=display_vars,
+          se=rob_se,
+          column.sep.width = "3pt",
+          title = "Program Impacts on Enrollment",
+          column.labels=c("(1)","(2)","(3)","(4)","(5)"),
+          dep.var.labels=c("Reported Enrollment","Highest Grade Attained"),
+          align= TRUE,
+          add.lines=list(c('Child Controls', 'no','yes','yes','yes','yes'),
+                         c('HH Controls', 'no','no','yes','yes','yes'),
+                         c('District Fixed Effects','no','no','no','yes','yes')),
+          covariate.labels = c("Pooled Treatment"),
+          model.numbers = FALSE
+          
+             )
+    
+        )
+display_html(toString(outreg))
+    
+    
+        
+    }

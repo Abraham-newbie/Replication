@@ -31,3 +31,7 @@ dependencies:
   - r-viridis
   - r-gridExtra
   - r-plotly
+  - r-ggeffects
+  - r-aer
+  - r-glmnet
+  
