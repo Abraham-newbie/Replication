@@ -266,7 +266,7 @@ col_vars<-c("fu_child_enrolled",x_vars)
 child_data_subset_1 <-child_data_subset [,colnames(child_data_subset )%in%col_vars] 
 child_data_subset_1  <-as.data.frame(child_data_subset_1 ) %>% na.omit()
 
-c<-glmnet (as.matrix (child_data_subset_1[ -1] ) , child_data_subset_1[ ,1],standardize=TRUE, alpha =1,label=TRUE)
+c<-glmnet (as.matrix (child_data_subset_1[ -1] ) , child_data_subset_1[ ,1],standardize=TRUE, alpha =1)
 
 cv<-cv.glmnet (as.matrix (child_data_subset_1[ -1] ), child_data_subset_1 [,1] , standardize=TRUE, type.measure='mse', nfold  =5,alpha =1)
 CF <- as.matrix(coef(cv, cv$lambda.1se))
@@ -282,7 +282,7 @@ col_vars<-c(x_vars)
 child_data_subset_2 <-child_data_subset [,colnames(child_data_subset )%in%col_vars] 
 
 child_data_subset_2 <-as.data.frame(child_data_subset_2 ) %>% na.omit()
-c<-glmnet (as.matrix (child_data_subset_2[ -1] ) , child_data_subset_2[ ,1],standardize=TRUE, alpha =1,label=TRUE)
+c<-glmnet (as.matrix (child_data_subset_2[ -1] ) , child_data_subset_2[ ,1],standardize=TRUE, alpha =1)
 k<-plot(c)
 
 cv<-cv.glmnet (as.matrix (child_data_subset_2[ -11] ), child_data_subset_2 [,1] , standardize=TRUE, type.measure='mse', nfold  =5,alpha =1)
