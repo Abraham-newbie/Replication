@@ -356,3 +356,73 @@ print(k)
 
     
 }
+                    
+        
+###################################################################
+# Double randomization plot 
+##################################################################                       
+                    
+ double_randomization_plot <-function(data)
+    {
+    
+child_data=data   
+
+child_controls = c("control_fu_child_age", "control_fu_female", "missing_fu_child_age", "missing_fu_female")
+
+hh_controls = c("control_fu_adults", "control_fu_hh_head_edu","control_fu_hh_head_occ_farmer" ,"control_fu_total_land", 
+             "control_fu_household_size" ,"missing_fu_adults", "missing_fu_hh_head_edu" ,"missing_fu_hh_head_occ_farmer",  
+             "missing_fu_total_land", "missing_fu_household_size")
+
+
+independent_vars = c("pooled_treatment")
+district_control =c("bl_district")
+dependent_vars<-c("fu_child_enrolled","fu_child_highest_grade")
+
+rel_vars<-c(child_controls,hh_controls,independent_vars,district_control,dependent_vars,"bl_education","bl_household_size","bl_number_child")
+
+child_data_subset= child_data %>% filter(fu_child_level == 1 & fu_young_child == 1)
+child_data_subset = child_data_subset[,rel_vars]
+
+child_data_subset <- transform(child_data_subset, pooled_treatment_random = sample(pooled_treatment))
+
+district_control =c("factor(bl_district)")
+
+child_data_subset =child_data_subset%>% mutate(
+     pooled_treatment = case_when(
+         pooled_treatment==pooled_treatment_random  ~2,
+         TRUE~ pooled_treatment
+     )
+)
+
+
+child_data_subset$pooled_treatment=as_factor(child_data_subset$pooled_treatment)
+
+child_data_subset_pool<-child_data_subset %>% filter(pooled_treatment==1|pooled_treatment==2) %>% sample_frac(., 0.5)
+
+
+child_data_subset_control<-child_data_subset[ sample( which(child_data_subset$pooled_treatment==0), round(1*length(which(child_data_subset$pooled_treatment==0)))), ]
+
+child_data_subset<-rbind(child_data_subset_pool,child_data_subset_control)%>% na.omit()
+
+
+child_data_subset_pool<-child_data_subset[ sample( which(child_data_subset$pooled_treatment==1), round(0.2*length(which(child_data_subset$pooled_treatment==1)))), ]
+
+
+child_data_subset%<>% select("bl_household_size","bl_education","bl_number_child","pooled_treatment") %>% na.omit() %>% filter(bl_household_size <30)
+child_data_subset$pooled_treatment=as_factor(child_data_subset$pooled_treatment)
+fig <- plot_ly(child_data_subset, x = ~ bl_household_size , y = ~bl_education, z = ~bl_number_child, color = ~pooled_treatment, colors = c('#BF382A', '#0C4B8E',"#32CD32"))
+fig <- fig %>% add_markers()
+fig <- fig %>% layout(scene = list(xaxis = list(title = 'Household Size'),
+                     yaxis = list(title = 'No. of Children'),
+      zaxis = list(title = 'Education Household head')))%>%layout(title = "Double Randomized Placebo Treatment Allocation")
+
+
+
+#child_data_subset_regression= child_data %>% filter(fu_child_level == 1 & fu_young_child == 1) %>%
+                # select(all_of(rel_vars)) 
+
+
+#child_data_subset_regression <- transform(child_data_subset, pooled_treatment_random = sample(pooled_treatment))
+return(fig)
+    
+}                   
