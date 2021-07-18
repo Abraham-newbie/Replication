@@ -26,6 +26,7 @@ The replication is conducted using R. Additional functions required to plot the 
 To run this reproducible notebook,firstly clone the notebook and proceed as follows in your conda terminal.
 
 > $ conda env create -f environment.yml
+
 > $ conda activate project_env
 
 The best way to view the notebook is to clone accordinly, or to view through nbviewer as tables and equations do not render well in github.
