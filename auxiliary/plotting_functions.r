@@ -288,7 +288,6 @@ print(f_1/f_2)
 ##################################################
                      
 impact_score_teachers<-function(data){
-    
 school_data=data
 
 total_score_pct_cntrl <- school_data %>% filter(fu_child_level == 1 & fu_young_child == 1 & pooled_treatment==0 ) %>%select (total_score_pct)%>%na.omit()
@@ -302,9 +301,8 @@ f_1<-ggplot(combdat, aes(total_score_pct, fill =treat_status )) + theme_minimal(
 
 
 
-
 total_score_pct_cntrl <- school_data %>% filter(fu_child_level == 1 & fu_young_child == 1 & pooled_treatment==0 ) %>%select (ss3_num_teachers)%>%na.omit()
-total_score_pct_treat<- school_data %>% filter(fu_child_level == 1 & fu_young_child == 1 & pooled_treatment==1  )%>% select (ss3_num_teachers)%>%na.omit()
+total_score_pct_treat<- school_data %>% filter(fu_child_level == 1 & fu_young_child == 1 & pooled_treatment==1 )%>% select (ss3_num_teachers)%>%na.omit()
 combdat <- dplyr::bind_rows(list(control=total_score_pct_cntrl,treatment=total_score_pct_treat),.id="treat_status")
 
 f_2<-ggplot(combdat, aes(ss3_num_teachers, x=treat_status,y=ss3_num_teachers,fill =treat_status )) + theme_minimal()+
@@ -312,12 +310,29 @@ f_2<-ggplot(combdat, aes(ss3_num_teachers, x=treat_status,y=ss3_num_teachers,fil
         labs(x ="Number of Teachers",y= "Density")
 
 
+total_score_pct_cntrl <- school_data %>% filter(fu_child_level == 1 & fu_young_child == 1 & pooled_treatment==0 & fu_female==1) %>%select (total_score_pct)%>%na.omit()
+total_score_pct_treat<- school_data %>% filter(fu_child_level == 1 & fu_young_child == 1 & pooled_treatment==1 & fu_female==1 )%>% select (total_score_pct)%>%na.omit()
+combdat <- dplyr::bind_rows(list(control=total_score_pct_cntrl,treatment=total_score_pct_treat),.id="treat_status")
+f_3<-ggplot(combdat, aes(total_score_pct, fill =treat_status )) + theme_minimal()+
+   geom_histogram(alpha = 0.5, aes(y = ..density..), position = 'identity',color = "black") +scale_fill_viridis_d(name = "")+
+  labs(x ="Percentage Score (Females)",y= "Density")
 
 
-print((f_1|f_2)/(f_1|f_2))
+
+total_score_pct_cntrl <- school_data %>% filter(fu_child_level == 1 & fu_young_child == 1 & pooled_treatment==0 & fu_female==1) %>%select (ss3_num_teachers)%>%na.omit()
+total_score_pct_treat<- school_data %>% filter(fu_child_level == 1 & fu_young_child == 1 & pooled_treatment==1 & fu_female==1)%>% select (ss3_num_teachers)%>%na.omit()
+combdat <- dplyr::bind_rows(list(control=total_score_pct_cntrl,treatment=total_score_pct_treat),.id="treat_status")
+
+f_4<-ggplot(combdat, aes(ss3_num_teachers, x=treat_status,y=ss3_num_teachers,fill =treat_status )) + theme_minimal()+
+       geom_violin(trim = FALSE)+theme(legend.position = "none")+scale_fill_viridis_d()+
+        labs(x ="Number of Teachers",y= "Density")
+
+
+print((f_1|f_2)/(f_3|f_4))
     
     
 }      
+        
                     
                     
                     
