@@ -3,17 +3,17 @@
 # Ose Data Science Project
 
 
-This repository contains the replication of the paper from Barrera-Osorio, Felipe and Blakeslee, David S and Hoover, Matthew and Linden, Leigh and Raju, Dhushyanth and Ryan, Stephen P "Delivering Education to the Underserved through a Public-Private Partnership Program in Pakistan." The code and data can be found [here] and the paper can be accessed [here]
+This repository contains the replication of the paper from Barrera-Osorio, Felipe and Blakeslee, David S and Hoover, Matthew and Linden, Leigh and Raju, Dhushyanth and Ryan, Stephen P "Delivering Education to the Underserved through a Public-Private Partnership Program in Pakistan." The code and data can be found [here](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/UWXULC) and the paper can be accessed [here](http://documents1.worldbank.org/curated/en/868011504015520701/pdf/WPS8177.pdf).
 
 ## Brief Description of the Paper
 
 The paper evaluates a program that randomly assigned private schools to underserved villages in Pakistan. Schools in the program were provided a per student subsidy to provide tuition free primary education,with hald of the treated villaged receiving a higher subsidy for female students. The program increased both average enrollment and test scores, and program schools were of higher quality than nearby public schools.
 
-This jupyter notebook contained in this repository attempts to replicate the main findings of the paper and expand on it with visualizations of the treatment effect.
+This jupyter notebook contained in this repository attempts to replicate the main findings of the paper and expand on it with visualizations of the treatment effect,additional analyses as well as supplementary robustness checks.
 
 ## Additional Notes
 
-The replication is conducted using R. Additional functions required to plot the graphs can be found [here] and [here].
+The replication is conducted using R. Additional functions required to plot the graphs can be found in the auxiliary folder [here].(https://github.com/OpenSourceEconomics/ose-data-science-course-project-Abraham-newbie/tree/master/auxiliary) and plots/graphs which cannot be directly reproduced due to constraints of CI or github (e.g 3-d plots,dynamic plots) can be found in the files folder [here](https://github.com/OpenSourceEconomics/ose-data-science-course-project-Abraham-newbie/tree/master/files).
 
 
 
