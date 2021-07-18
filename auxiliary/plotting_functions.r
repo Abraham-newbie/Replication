@@ -425,4 +425,56 @@ fig <- fig %>% layout(scene = list(xaxis = list(title = 'Household Size'),
 #child_data_subset_regression <- transform(child_data_subset, pooled_treatment_random = sample(pooled_treatment))
 return(fig)
     
+}           
+                    
+#####################################################
+## Marginal Impact of Test scores on different ages             
+####################################################
+                    
+                    
+                    
+ marginal_impact_test_score<-function(data)
+    {
+
+
+child_controls = c("Age", "fu_female", "missing_fu_child_age", "missing_fu_female")
+
+    
+hh_controls = c("control_fu_adults", "control_fu_hh_head_edu","control_fu_hh_head_occ_farmer" ,"control_fu_total_land", 
+             "control_fu_household_size" ,"missing_fu_adults", "missing_fu_hh_head_edu" ,"missing_fu_hh_head_occ_farmer",  
+             "missing_fu_total_land", "missing_fu_household_size")
+
+independent_vars = c("treatment_1", "treat_1_female" ,"treatment_2","treat_2_female")
+district_control =c("factor(bl_district)")
+
+
+child_data_subset= data %>% filter(fu_child_level == 1 & fu_young_child == 1)
+child_data_subset$Age=child_data_subset$control_fu_child_age
+
+child_data_subset$treatment_1<- factor(child_data_subset$treatment_1, levels=c('0','1'))
+labels=c('Pooled Treatment','Control')
+
+x_vars <- c(independent_vars,child_controls,hh_controls,district_control)
+
+
+
+full.formula <- as.formula(paste('total_score_dev', paste(x_vars,collapse = ' + '),sep='~'))
+
+lm_score<-lm(full.formula,data=child_data_subset,weights=child_data_subset$hh_weight)
+
+x<-ggpredict(lm_score, terms = c("treatment_1", "fu_female","Age"), ci = FALSE, add.data = TRUE)
+plot(x,connect.lines = TRUE,facet = TRUE, ci.style = "errorbar", dot.size = 1.5) + labs(
+    x = "Pooled Treatment Dummy", 
+    y = "Total Test Score Z-Score", 
+    title = "Predicted Mean Score"
+  )+ labs(colour = "Child = Female")+theme_bw()
+  
 }                   
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
