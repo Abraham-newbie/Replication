@@ -6,7 +6,7 @@ OSE data science submission, Abraham Raju (3296612) | Summer 2021, M.Sc. Economi
 # Replication of Barrera et. al. 
 
 
-This repository contains the replication of the paper from **Barrera-Osorio, Felipe and Blakeslee, David S and Hoover, Matthew and Linden, Leigh and Raju, Dhushyanth and Ryan, Stephen P "Delivering Education to the Underserved through a Public-Private Partnership Program in Pakistan."**
+>This repository contains the replication of the paper from **Barrera-Osorio, Felipe and Blakeslee, David S and Hoover, Matthew and Linden, Leigh and Raju, Dhushyanth and Ryan, Stephen P "Delivering Education to the Underserved through a Public-Private Partnership Program in Pakistan."**
 
 The code and data can be found [here](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/UWXULC) and the paper can be accessed [here](http://documents1.worldbank.org/curated/en/868011504015520701/pdf/WPS8177.pdf).
 
@@ -30,5 +30,5 @@ To run this reproducible notebook,firstly clone the notebook and proceed as foll
 
 > $ conda activate project_env
 
-The best way to view the notebook is to clone accordinly, or to view through nbviewer as tables and equations do not render well in github.
+The best way to view the notebook is to clone accordingly, or to view through nbviewer as tables and equations do not render well in github.
 Please reach out to abrahamrajuloyola@gmail.com for any comments or feedback.
