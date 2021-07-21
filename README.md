@@ -6,7 +6,7 @@ OSE data science submission, Abraham Raju (3296612) | Summer 2021, M.Sc. Economi
 # Replication of Barrera et. al. 
 
 
->This repository contains the replication of the paper from **Barrera-Osorio, Felipe and Blakeslee, David S and Hoover, Matthew and Linden, Leigh and Raju, Dhushyanth and Ryan, Stephen P "Delivering Education to the Underserved through a Public-Private Partnership Program in Pakistan."**
+>This repository contains the replication of the paper from Barrera-Osorio, Felipe and Blakeslee, David S and Hoover, Matthew and Linden, Leigh and Raju, Dhushyanth and Ryan, Stephen P's **"Delivering Education to the Underserved through a Public-Private Partnership Program in Pakistan."**
 
 The code and data can be found [here](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/UWXULC) and the paper can be accessed [here](http://documents1.worldbank.org/curated/en/868011504015520701/pdf/WPS8177.pdf).
 
