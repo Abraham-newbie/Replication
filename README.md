@@ -1,8 +1,6 @@
 
 [![nbviewer](https://raw.githubusercontent.com/jupyter/design/master/logos/Badges/nbviewer_badge.svg)](https://nbviewer.jupyter.org/github/OpenSourceEconomics/ose-data-science-course-project-Abraham-newbie/blob/master/project.ipynb)
 
-OSE data science submission, Abraham Raju (3296612) | Summer 2021, M.Sc. Economics, Bonn University
-
 # Replication of Barrera et. al. 
 
 
